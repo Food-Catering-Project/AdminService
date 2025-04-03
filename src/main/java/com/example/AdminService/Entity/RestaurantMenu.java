@@ -15,7 +15,7 @@ public class RestaurantMenu {
 
     @Column(nullable = false)
     private String menuName;
-    
+
     @Column(nullable = false)
     private double price;
 

@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/admin/api/RestaurantMenuController")
+@RequestMapping("/admin/api/RestaurantMenu")
 public class RestaurantMenuController {
 
 
