@@ -2,6 +2,7 @@ package com.example.AdminService.Controller;
 
 
 import com.example.AdminService.Entity.Owner;
+import com.example.AdminService.Service.AuthService;
 import com.example.AdminService.Service.OwnerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +16,11 @@ import java.util.Map;
 public class OwnerController {
 
    private final OwnerService ownerService;
+   private final AuthService authService;
 
-    public OwnerController(OwnerService ownerService) {
+    public OwnerController(OwnerService ownerService, AuthService authService) {
         this.ownerService = ownerService;
+        this.authService = authService;
     }
 
     @PostMapping("/addowner")
@@ -29,6 +32,14 @@ public class OwnerController {
             return new ResponseEntity<>(Map.of("message", "Unable to add", "error", e.getMessage()), HttpStatus.BAD_REQUEST);
 
         }
+    }
+
+
+    @PostMapping("/login")
+    public String login(@RequestParam String name, @RequestParam String password) {
+        String token = authService.verify(name, password);
+        return token;
+
     }
 
     @GetMapping("/getAllOwners")
