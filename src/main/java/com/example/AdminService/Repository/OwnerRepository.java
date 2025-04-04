@@ -9,6 +9,8 @@ import java.util.Optional;
 @Repository
 public interface OwnerRepository extends JpaRepository<Owner,Long> {
     Owner findByName(String name);
+//    Optional<Owner> findByNumber(String number); // Find owner by phone number
+
 
 
 }

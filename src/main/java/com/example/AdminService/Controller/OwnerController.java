@@ -84,5 +84,38 @@ public class OwnerController {
         }
     }
 
+//    // Step 1: Send OTP
+//    @PostMapping("/forgot-password/send-otp")
+//    public ResponseEntity<Map<String, Object>> sendOtp(@RequestParam String number) {
+//        try {
+//            Map<String, Object> response = ownerService.sendOtp(number);
+//            return new ResponseEntity<>(response, HttpStatus.OK);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(Map.of("message", "Error sending OTP", "error", e.getMessage()), HttpStatus.BAD_REQUEST);
+//        }
+//    }
+//
+//    // Step 2: Verify OTP
+//    @PostMapping("/forgot-password/verify-otp")
+//    public ResponseEntity<Map<String, Object>> verifyOtp(@RequestParam String number, @RequestParam String otp) {
+//        try {
+//            Map<String, Object> response = ownerService.verifyOtp(number, otp);
+//            return new ResponseEntity<>(response, HttpStatus.OK);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(Map.of("message", "Error verifying OTP", "error", e.getMessage()), HttpStatus.BAD_REQUEST);
+//        }
+//    }
+//
+//    // Step 3: Reset Password
+//    @PostMapping("/forgot-password/reset")
+//    public ResponseEntity<Map<String, Object>> resetPassword(@RequestParam String number, @RequestParam String newPassword) {
+//        try {
+//            Map<String, Object> response = ownerService.resetPassword(number, newPassword);
+//            return new ResponseEntity<>(response, HttpStatus.OK);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(Map.of("message", "Error resetting password", "error", e.getMessage()), HttpStatus.BAD_REQUEST);
+//        }
+//    }
+
 }
 

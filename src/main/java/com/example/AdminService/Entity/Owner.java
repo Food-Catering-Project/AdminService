@@ -23,7 +23,7 @@ public class Owner implements UserDetails {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String number;
 
     @Column(nullable = false,columnDefinition = "TEXT")
