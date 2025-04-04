@@ -73,11 +73,22 @@ public class OwnerRestaurantService {
         );
     }
 
+    public Map<String, Object> getRestuarantByOwner(Long ownerId) {
+        Owner owner = ownerRepository.findById(ownerId).orElseThrow(
+                () -> { throw  new RuntimeException("this owner doesnot exist"); }
+        );
 
-    // Fetch a specific restaurant by ID
-//    public Restaurant getRestaurantById(Long id) {
-//        return restaurantRepository.findById(id)
-//                .orElseThrow(() -> new RuntimeException("Restaurant not found"));
-//    }
+        OwnerRestaurant ownerRestaurant = ownerRestaurantRepository.findByOwner(owner);
+
+        return Map.of(
+                "status", HttpStatus.OK.value(),
+                "message", "OwnerRestuarant fetched  successfully",
+                "data",ownerRestaurant
+
+
+        );
+
+    }
+
 
 }

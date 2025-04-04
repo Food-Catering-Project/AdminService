@@ -22,9 +22,13 @@ public class RestaurantMenu {
     @Column(nullable = false)
     private String category;
 
+//    @ManyToOne
+//    @JoinColumn(name = "restaurant_id", nullable = false)
+//    private OwnerRestaurant  ownerRestaurant;
+
     @ManyToOne
-    @JoinColumn(name = "restaurant_id", nullable = false)
-    private OwnerRestaurant  ownerRestaurant;
+    @JoinColumn(name = "restaurant_id")
+    private OwnerRestaurant ownerRestaurant;
 
     public Long getMenuId() {
         return MenuId;

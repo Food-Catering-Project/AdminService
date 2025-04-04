@@ -42,6 +42,17 @@ public class OwnerController {
 
     }
 
+    @GetMapping("/getOwnerByName/{name}")
+    public ResponseEntity<Map<String,Object>> getOwnerByName(@PathVariable String name) {
+        try{
+            Map<String,Object> res  = ownerService.getOwnerByName(name);
+            return new ResponseEntity<>(res, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(Map.of("message", "Unable to fetch owner details", "error", e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
     @GetMapping("/getAllOwners")
     public ResponseEntity<Map<String,Object>> getAllOwners() {
         try{

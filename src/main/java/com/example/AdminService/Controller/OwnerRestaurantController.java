@@ -26,7 +26,19 @@ public class OwnerRestaurantController {
             Map<String,Object> res  = ownerRestaurantService.addRestaurant(ownerId,ownerRestaurant);
             return new ResponseEntity<>(res, HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(Map.of("message", "Restuarant to added", "error", e.getMessage()), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(Map.of("message", "Restuarant not added", "error", e.getMessage()), HttpStatus.BAD_REQUEST);
+
+        }
+    }
+
+
+    @GetMapping("/getRestuarantBy/{ownerId}")
+    public ResponseEntity<Map<String, Object>> getRestuarantByOwner(@PathVariable Long ownerId) {
+        try{
+            Map<String,Object> res  = ownerRestaurantService.getRestuarantByOwner(ownerId);
+            return new ResponseEntity<>(res, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(Map.of("message", "unable to fetchedRestuarant ", "error", e.getMessage()), HttpStatus.BAD_REQUEST);
 
         }
     }
@@ -37,7 +49,7 @@ public class OwnerRestaurantController {
             Map<String,Object> res  = ownerRestaurantService.getAllRestaurants();
             return new ResponseEntity<>(res, HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(Map.of("message", "Restuarant fetched suucessfully", "error", e.getMessage()), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(Map.of("message", "unable to  fetched Restuarant", "error", e.getMessage()), HttpStatus.BAD_REQUEST);
 
         }
     }
@@ -48,7 +60,7 @@ public class OwnerRestaurantController {
             Map<String,Object> res  = ownerRestaurantService.updateRestaurant(RestaurantId,ownerRestaurant);
             return new ResponseEntity<>(res, HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(Map.of("message", "Restuarant updated suucessfully", "error", e.getMessage()), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(Map.of("message", "Restuarant not updated suucessfully", "error", e.getMessage()), HttpStatus.BAD_REQUEST);
 
         }
     }
@@ -59,7 +71,7 @@ public class OwnerRestaurantController {
             Map<String,Object> res  = ownerRestaurantService.deleteRestaurant(RestaurantId);
             return new ResponseEntity<>(res, HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(Map.of("message", "Restuarant deleted suucessfully", "error", e.getMessage()), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(Map.of("message", "Restuarant not deleted suucessfully", "error", e.getMessage()), HttpStatus.BAD_REQUEST);
 
         }
     }

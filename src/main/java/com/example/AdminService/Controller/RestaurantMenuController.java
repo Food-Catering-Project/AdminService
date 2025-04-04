@@ -3,7 +3,6 @@ package com.example.AdminService.Controller;
 
 import com.example.AdminService.Entity.RestaurantMenu;
 import com.example.AdminService.Service.RestaurantMenuService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,16 +21,6 @@ public class RestaurantMenuController {
         this.restaurantMenuService = restaurantMenuService;
     }
 
-//    @PostMapping("/addingMenu/{ownerRestaurantId}")
-//    public ResponseEntity<Map<String, Object>> addMenu(@PathVariable Long RestaurantId,@RequestBody RestaurantMenu restaurantMenu) {
-//        try{
-//            Map<String,Object> res  = restaurantMenuService.addMenu(RestaurantId,restaurantMenu);
-//            return new ResponseEntity<>(res, HttpStatus.CREATED);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>(Map.of("message", "Menu  added", "error", e.getMessage()), HttpStatus.BAD_REQUEST);
-//
-//        }
-//    }
 
     @PostMapping("/addingMenus/{restaurantId}")
     public ResponseEntity<Map<String, Object>> addMenus(@PathVariable Long restaurantId, @RequestBody List<RestaurantMenu> restaurantMenus) {
@@ -47,6 +36,19 @@ public class RestaurantMenuController {
         }
     }
 
+    @GetMapping("/getMenus/{RestaurantId}")
+    public ResponseEntity<Map<String,Object>> getMenusByRestaurantId(@PathVariable Long RestaurantId){
+        try{
+            Map<String,Object> res = restaurantMenuService.getMenusByRestaurantId(RestaurantId);
+            return new ResponseEntity<>(res,HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(Map.of("message", "Failed to fetched menus", "error", e.getMessage()), HttpStatus.BAD_REQUEST);
+
+        }
+    }
+
+
 
     @GetMapping("/getAllMenus")
     public ResponseEntity<Map<String, Object>> getAllMenus() {
@@ -54,7 +56,7 @@ public class RestaurantMenuController {
             Map<String,Object> res  = restaurantMenuService.getAllMenus();
             return new ResponseEntity<>(res, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(Map.of("message", "Menu fetched successfully", "error", e.getMessage()), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(Map.of("message", "Menu not fetched successfully", "error", e.getMessage()), HttpStatus.BAD_REQUEST);
 
         }
     }
@@ -78,7 +80,7 @@ public class RestaurantMenuController {
             Map<String,Object> res  = restaurantMenuService.deleteMenu(MenuId);
             return new ResponseEntity<>(res, HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(Map.of("message", "Menu deleted suucessfully", "error", e.getMessage()), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(Map.of("message", "Menu not deleted suucessfully", "error", e.getMessage()), HttpStatus.BAD_REQUEST);
 
         }
     }

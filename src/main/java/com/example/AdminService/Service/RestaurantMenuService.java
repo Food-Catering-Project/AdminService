@@ -23,22 +23,7 @@ public class RestaurantMenuService {
         this.restaurantMenuRepository = restaurantMenuRepository;
         this.ownerRestaurantRepository = ownerRestaurantRepository;
     }
-//
-//    public Map<String, Object> addMenu(Long restaurantId, RestaurantMenu restaurantMenu) {
-//        OwnerRestaurant ownerRestaurant = ownerRestaurantRepository.findById(restaurantId).orElseThrow(
-//                ()->{
-//                    throw  new RuntimeException("no restuarant id found");
-//                }
-//        );
-//         restaurantMenu.setOwnerRestaurant(ownerRestaurant);
-//        RestaurantMenu restaurantMenu1 = restaurantMenuRepository.save(restaurantMenu);
-//        return Map.of(
-//                "status", HttpStatus.CREATED.value(),
-//                "message", "Menu added successfully",
-//                "data",restaurantMenu1
-//
-//        );
-//    }
+
 
     public Map<String, Object> getAllMenus() {
         List<RestaurantMenu> list = restaurantMenuRepository.findAll();
@@ -100,4 +85,20 @@ public class RestaurantMenuService {
         return response;
     }
 
+
+    public Map<String, Object> getMenusByRestaurantId(Long restaurantId) {
+
+        OwnerRestaurant ownerRestaurant = ownerRestaurantRepository.findById(restaurantId).orElseThrow(
+                ()-> {throw  new RuntimeException("restuarant is not present");  }
+        );
+
+        List<RestaurantMenu> list = restaurantMenuRepository.findByOwnerRestaurant(ownerRestaurant);
+
+        return Map.of(
+                "status",HttpStatus.OK.value(),
+                "message","menus fetched successfully",
+                "data",list
+        );
+
+    }
 }

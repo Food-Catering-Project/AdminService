@@ -81,5 +81,15 @@ public class OwnerService {
         );
 
     }
+
+    public Map<String, Object> getOwnerByName(String name) {
+        Owner owner = ownerRepository.findByName(name);
+        return Map.of(
+                "status", HttpStatus.OK.value(),
+                "message", "Owner fetched successfully",
+                "data", owner
+
+        );
+    }
 }
 

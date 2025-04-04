@@ -99,8 +99,10 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/admin/api/owner/login","/admin/api/owner/addowner"
-                        ,"/admin/api/OwnerRestaurant/addRestuarants/{ownerId}",
-                                "/admin/api/RestaurantMenu//addingMenus/{restaurantId}").permitAll()
+                                ,"/admin/api/owner/getOwnerByName/{name}"
+                        ,"/admin/api/OwnerRestaurant/addRestuarants/{ownerId}","/admin/api/OwnerRestaurant/getRestuarantBy/{ownerId}",
+                                "/admin/api/RestaurantMenu/addingMenus/{restaurantId}"
+                        ,"admin/api/RestaurantMenu/getMenus/{RestaurantId}").permitAll()
 
                         .anyRequest().authenticated()
                 )
