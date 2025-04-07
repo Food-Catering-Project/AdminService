@@ -2,17 +2,21 @@ package com.example.AdminService.Service;
 
 import com.example.AdminService.Entity.Owner;
 import com.example.AdminService.Repository.OwnerRepository;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class OwnerService {
+
+    @Value("${fast2sms.api.key}")
+    private String apiKey;
 
 
     private final OwnerRepository ownerRepository;
@@ -23,22 +27,22 @@ public class OwnerService {
         this.passwordEncoder = passwordEncoder;
     }
 
-   // Register a new owner
-     public Map<String,Object> addOwner(Owner owner) {
+    // Register a new owner
+    public Map<String, Object> addOwner(Owner owner) {
 
-         owner.setPassword(passwordEncoder.encode(owner.getPassword()));
+        owner.setPassword(passwordEncoder.encode(owner.getPassword()));
 
-         Owner owner1=  ownerRepository.save(owner);
-         return Map.of(
-                 "status", HttpStatus.CREATED.value(),
-                 "message", " item successfully created",
-                 "data", owner1
-         );
-     }
+        Owner owner1 = ownerRepository.save(owner);
+        return Map.of(
+                "status", HttpStatus.CREATED.value(),
+                "message", " item successfully created",
+                "data", owner1
+        );
+    }
 
-   // Fetch all registered owners
-    public Map<String,Object> getAllOwners() {
-        List<Owner> owner1 =  ownerRepository.findAll();
+    // Fetch all registered owners
+    public Map<String, Object> getAllOwners() {
+        List<Owner> owner1 = ownerRepository.findAll();
         return Map.of(
                 "status", HttpStatus.OK.value(),
                 "message", " owners fetched successfully",
@@ -46,13 +50,6 @@ public class OwnerService {
         );
     }
 
-
-
-   // Fetch a specific owner by ID
-//    public Owner getOwnerById(Long id) {
-//        return ownerRepository.findById(id)
-//                .orElseThrow(() -> new RuntimeException("Owner not found"));
-//    }
 
     public Map<String, Object> updateOwner(Long ownerId, Owner owner) {
         Owner existingOwner = ownerRepository.findById(ownerId).orElseThrow(() -> {
@@ -72,10 +69,9 @@ public class OwnerService {
     }
 
 
-
     // Delete owner
     public Map<String, Object> deleteOwner(Long ownerId) {
-         ownerRepository.deleteById(ownerId);
+        ownerRepository.deleteById(ownerId);
         return Map.of(
                 "status", HttpStatus.OK.value(),
                 "message", "Owner deleted successfully"
@@ -101,50 +97,101 @@ public class OwnerService {
         return String.valueOf(otp);
     }
 
-//    // Step 1: Send OTP
-//    public Map<String, Object> sendOtp(String number) {
-//        Optional<Owner> ownerOptional = ownerRepository.findByNumber(number);
-//
-//        if (ownerOptional.isEmpty()) {
-//            return Map.of("status", HttpStatus.NOT_FOUND.value(), "message", "Owner not found");
-//        }
-//
-//        String otp = generateOtp();
-//
-//        return Map.of("status", HttpStatus.OK.value(), "message", "OTP sent successfully", "otp", otp);
-//    }
-//
-//    // Step 2: Verify OTP
-//    public Map<String, Object> verifyOtp(String number, String otp) {
-//        Optional<Owner> ownerOptional = ownerRepository.findByNumber(number);
-//
-//        if (ownerOptional.isEmpty()) {
-//            return Map.of("status", HttpStatus.NOT_FOUND.value(), "message", "Owner not found");
-//        }
-//
-//        Owner owner = ownerOptional.get();
-//
-//        if (!owner.isOtpValid() || !owner.getOtp().equals(otp)) {
-//            return Map.of("status", HttpStatus.BAD_REQUEST.value(), "message", "Invalid or expired OTP");
-//        }
-//
-//        return Map.of("status", HttpStatus.OK.value(), "message", "OTP verified successfully");
-//    }
-//
-//    // Step 3: Reset Password
-//    public Map<String, Object> resetPassword(String number, String newPassword) {
-//        Optional<Owner> ownerOptional = ownerRepository.findByNumber(number);
-//
-//        if (ownerOptional.isEmpty()) {
-//            return Map.of("status", HttpStatus.NOT_FOUND.value(), "message", "Owner not found");
-//        }
-//
-//        Owner owner = ownerOptional.get();
-//
-//        owner.setPassword(passwordEncoder.encode(newPassword));
-//        ownerRepository.save(owner);
-//
-//        return Map.of("status", HttpStatus.OK.value(), "message", "Password reset successfully");
-//    }
-}
+    // Service: Send OTP logic
+    public Map<String, Object> sendOtp(String number) {
+        Optional<Owner> ownerOptional = ownerRepository.findByNumber(number);
 
+        if (ownerOptional.isEmpty()) {
+            return Map.of(
+                    "status", HttpStatus.NOT_FOUND.value(),
+                    "message", "Owner not found"
+            );
+        }
+
+        String otp = generateOtp();
+        System.out.println("otp"+ otp);
+
+
+        // Store the OTP temporarily
+        this.storeOtp(number, otp);
+
+        // Send OTP via Fast2SMS
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+            headers.set("authorization", apiKey);
+
+            MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+            body.add("sender_id", "TXTIND");
+            body.add("message", "Your OTP for change password is " + otp);
+            body.add("language", "english");
+//            body.add("route", "otp");
+            body.add("route", "default");
+            body.add("numbers", number);
+
+            HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
+            String smsApiUrl = "https://www.fast2sms.com/dev/bulkV2";
+
+            ResponseEntity<String> response = restTemplate.postForEntity(smsApiUrl, request, String.class);
+
+            return Map.of(
+                    "status", HttpStatus.OK.value(),
+                    "message", "OTP sent successfully",
+                    "otp", otp,
+                    "response", response.getBody()
+            );
+
+        } catch (Exception e) {
+            return Map.of(
+                    "status", HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                    "message", "Failed to send OTP",
+                    "error", e.getMessage()
+            );
+        }
+    }
+
+    // In-memory OTP store: phoneNumber -> OTP
+    private final Map<String, String> otpStore = new HashMap<>();
+
+    // Store OTP
+    public void storeOtp(String phoneNumber, String otp) {
+        otpStore.put(phoneNumber, otp);
+    }
+
+    // Verify OTP
+    public boolean verifyOtp(String phoneNumber, String enteredOtp) {
+        System.out.println("enteredOtp" + enteredOtp);
+        String savedOtp = otpStore.get(phoneNumber);
+        System.out.println("savedOtp" + savedOtp);
+        return savedOtp != null && savedOtp.equals(enteredOtp);
+    }
+
+    // Optional: clear OTP after successful verification
+    public void clearOtp(String phoneNumber) {
+        otpStore.remove(phoneNumber);
+    }
+
+
+    public Map<String, Object> resetPassword(String number, String newPassword) {
+        Optional<Owner> optionalOwner = ownerRepository.findByNumber(number);
+
+        if (optionalOwner.isEmpty()) {
+            return Map.of(
+                    "status", HttpStatus.NOT_FOUND.value(),
+                    "message", "Owner not found with this number"
+            );
+        }
+
+        Owner owner = optionalOwner.get();
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        owner.setPassword(encodedPassword);
+        ownerRepository.save(owner);
+
+        return Map.of(
+                "status", HttpStatus.OK.value(),
+                "message", "Password reset successful"
+        );
+    }
+}

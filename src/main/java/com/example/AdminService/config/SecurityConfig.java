@@ -98,12 +98,24 @@ public class SecurityConfig {
                 .cors(cors->cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/admin/api/owner/login","/admin/api/owner/addowner"
-                                ,"/admin/api/owner/getOwnerByName/{name}"
-                        ,"/admin/api/OwnerRestaurant/addRestuarants/{ownerId}","/admin/api/OwnerRestaurant/getRestuarantBy/{ownerId}",
-                                "/admin/api/RestaurantMenu/addingMenus/{restaurantId}"
-                        ,"admin/api/RestaurantMenu/getMenus/{RestaurantId}").permitAll()
-
+//                        .requestMatchers("/admin/api/owner/login","/admin/api/owner/addowner"
+//                                ,"/admin/api/owner/getOwnerByName/{name}", "/admin/api/owner/forgot-password/send-otp",
+//                        "/admin/api/owner/forgot-password/verify-otp","/admin/api/owner/forgot-password/reset-password"
+//                        ,"/admin/api/OwnerRestaurant/addRestuarants/{ownerId}","/admin/api/OwnerRestaurant/getRestuarantBy/{ownerId}",
+//                                "/admin/api/RestaurantMenu/addingMenus/{restaurantId}"
+//                        ,"/admin/api/RestaurantMenu/getMenus/{RestaurantId}").permitAll()
+                .requestMatchers(
+                        "/admin/api/owner/login",
+                        "/admin/api/owner/addowner",
+                        "/admin/api/owner/getOwnerByName/{name}",
+                        "/admin/api/owner/forgot-password/send-otp",
+                        "/admin/api/owner/forgot-password/verify-otp",
+                        "/admin/api/owner/forgot-password/reset-password", // ✅ fixed here
+                        "/admin/api/OwnerRestaurant/addRestuarants/{ownerId}",
+                        "/admin/api/OwnerRestaurant/getRestuarantBy/{ownerId}",
+                        "/admin/api/RestaurantMenu/addingMenus/{restaurantId}",
+                        "/admin/api/RestaurantMenu/getMenus/{RestaurantId}" // ✅ added missing slash at the beginning
+                ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -127,7 +139,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5174/"));
+        configuration.setAllowedOrigins(List.of("http://localhost:5174"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")); // Allow more methods
         configuration.setAllowedHeaders(List.of("*")); // Allow all headers
         configuration.setAllowCredentials(true); // Allow credentials (if needed)
