@@ -26,6 +26,9 @@ public class RestaurantMenu {
 //    @JoinColumn(name = "restaurant_id", nullable = false)
 //    private OwnerRestaurant  ownerRestaurant;
 
+    @Column(nullable = false)
+    private String imgUrl;
+
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
     private OwnerRestaurant ownerRestaurant;
@@ -68,5 +71,13 @@ public class RestaurantMenu {
 
     public void setOwnerRestaurant(OwnerRestaurant ownerRestaurant) {
         this.ownerRestaurant = ownerRestaurant;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 }

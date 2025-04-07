@@ -28,6 +28,9 @@ public class OwnerRestaurant {
     @Column(nullable = false,columnDefinition = "TEXT")
     private double rating;
 
+    @Column(nullable = false)
+    private String imgUrl;
+
     @ManyToOne
     @JoinColumn(name = "owner_id", nullable = false)
     private Owner owner;
@@ -78,5 +81,13 @@ public class OwnerRestaurant {
 
     public void setOwner(Owner owner) {
         this.owner = owner;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 }

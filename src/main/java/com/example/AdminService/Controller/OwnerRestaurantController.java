@@ -11,6 +11,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/admin/api/OwnerRestaurant")
+//@CrossOrigin("*")
 public class OwnerRestaurantController {
 
 

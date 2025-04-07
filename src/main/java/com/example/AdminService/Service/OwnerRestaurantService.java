@@ -4,7 +4,6 @@ import com.example.AdminService.Entity.Owner;
 import com.example.AdminService.Entity.OwnerRestaurant;
 import com.example.AdminService.Repository.OwnerRepository;
 import com.example.AdminService.Repository.OwnerRestaurantRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 

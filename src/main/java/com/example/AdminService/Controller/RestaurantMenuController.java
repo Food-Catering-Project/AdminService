@@ -12,6 +12,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/admin/api/RestaurantMenu")
+//@CrossOrigin("*")
 public class RestaurantMenuController {
 
 

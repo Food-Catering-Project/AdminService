@@ -13,6 +13,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/admin/api/owner")
+//@CrossOrigin("*")
 public class OwnerController {
 
    private final OwnerService ownerService;
