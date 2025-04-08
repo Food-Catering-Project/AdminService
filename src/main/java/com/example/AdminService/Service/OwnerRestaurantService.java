@@ -37,12 +37,19 @@ public class OwnerRestaurantService {
     }
 
     public Map<String, Object> getAllRestaurants() {
-        List<OwnerRestaurant>list = ownerRestaurantRepository.findAll();
+        List<OwnerRestaurant> list = ownerRestaurantRepository.findAllByOrderByRatingDesc();
         return Map.of(
                 "status", HttpStatus.OK.value(),
-                "message", " All  Restaurant fetched succesfully",
+                "message", "All restaurants fetched successfully",
                 "data", list
         );
+
+//        List<OwnerRestaurant>list = ownerRestaurantRepository.findAll();
+//        return Map.of(
+//                "status", HttpStatus.OK.value(),
+//                "message", " All  Restaurant fetched succesfully",
+//                "data", list
+//        );
 
     }
 
